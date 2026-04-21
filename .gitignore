@@ -1,4 +1,9 @@
 /raw_data/**
-/silver/**
+
+/silver/*
+!/silver/infracoes/
+/silver/infracoes/**
+
+/report/**
 **/__pycache__
-.venv
+/.venv
