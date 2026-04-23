@@ -1,5 +1,5 @@
 # %%
-from csv_helper import load_csv
+from src.utils.csv_utils import load_csv
 from pathlib import Path  
 import pandas as pd
 
@@ -16,7 +16,7 @@ infracoes = {
 # Tratamento 10.Tipo de infrações cometidas
 # =========================================
 
-def treat_tipos_infracoes(df):     
+def treat_tipos_infracoes(df, year):     
     df = df.set_index('Tipo')
     df = df.T
     df = df.drop(index='Total')
@@ -42,11 +42,18 @@ def treat_tipos_infracoes(df):
         }
 
     df['MES'] = df['MES'].map(month_map)
+    df['ANO'] = year
+
+    cols = ['MES', 'ANO'] + [c for c in df.columns if c not in ('MES', 'ANO')] 
+    df = df[cols]
+
     df = df.set_index('MES')
     return(df)
 
-infracoes = {year: treat_tipos_infracoes(df) for year,df in infracoes.items()}
+infracoes = {year: treat_tipos_infracoes(df, year) for year,df in infracoes.items()}
 
-for year, df in infracoes.items():
-    df.to_csv(f"silver/infracoes/infracoes_{year}.csv")
+infracoes_all = pd.concat(infracoes.values(), axis=0)
+infracoes_all.to_csv("silver/tipos_infracoes_2018_2026.csv")
+
+
 
