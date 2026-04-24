@@ -1,6 +1,6 @@
 # mappings.py
 
-TIPO_VEICULO_MAP = {
+VEHICLE_TYPE_MAPPING = {
     # Automóveis e utilitários leves
     "AUTOMOVEL":    "AUTOMÓVEL",
     "AUTOMÓVEL":    "AUTOMÓVEL",

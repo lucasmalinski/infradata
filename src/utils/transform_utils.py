@@ -3,12 +3,17 @@ import pandas as pd
 # =======================================
 # CONSTANT UTILS
 # =======================================
-MONTH_MAP = {
+LONG_MONTH_MAP = {
     'Janeiro':1, 'Fevereiro':2, 'Marco':3, 'Abril':4,
     'Maio':5, 'Junho': 6, 'Julho':7, 'Agosto':8,
     'Setembro':9, 'Outubro':10, 'Novembro':11, 'Dezembro':12
-}
+    }
 
+MONTH_MAP = {
+        'JAN':1, 'FEV':2, 'MAR':3, 'ABR':4,
+        'MAI':5, 'JUN':6, 'JUL':7, 'AGO':8,
+        'SET':9, 'OUT':10, 'NOV':11, 'DEZ':12
+        }
 
 # =======================================
 # FUNCTION UTILS
