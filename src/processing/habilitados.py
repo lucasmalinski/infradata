@@ -1,17 +1,20 @@
+from src.utils.csv_utils import load_csv
+from src.utils.transform_utils import remove_thousands_separator
+from pathlib import Path
+import pandas as pd
 
-# %%
 # =======================================
 # Tratamento 11.Habilitados
 # =======================================
-habilitados = load_csv(HABILITADOS_PATH)
 
-habilitados = habilitados.transpose()
-habilitados.columns = ["total", "permissionario_pd", "condutor_definitivo_cnh"]
-habilitados = habilitados.drop(index="Tipo")
-habilitados.index.name = "ANO"
+def process(fpath: Path) -> pd.DataFrame:
+    df = load_csv(fpath)
 
-habilitados = habilitados.astype('str')
-habilitados = habilitados.apply(
-    lambda col:col.str.replace('.','', regex=False)
-)
-habilitados = habilitados.astype('int')
+    df = df.transpose()
+    df.columns = ["total", "permissionario_pd", "condutor_definitivo_cnh"]
+    df = df.drop(index="Tipo")
+    df.index.name = "ANO"
+
+    df = remove_thousands_separator(df)
+    df = df.astype('int')
+    return df
