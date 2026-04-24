@@ -1,14 +1,15 @@
 from src.utils.csv_utils import load_csv
-from src.utils.df_utils import remove_thousands_separator
+from src.utils.transform_utils import remove_thousands_separator
+from pathlib import Path
 import pandas as pd
 
 # =======================================
 # Tratamento 3.Frota
 # =======================================
 
-def process(path: Path) -> pd.DataFrame:
-    frota = load_csv(path) 
-    frota = frota.set_index("ANO")
-    frota = remove_thousands_separator(frota)
-    frota = frota.astype(int)
-    return frota
+def process(fpath: Path) -> pd.DataFrame:
+    df = load_csv(fpath) 
+    df = df.set_index("ANO")
+    df = remove_thousands_separator(df)
+    df = df.astype(int)
+    return df
