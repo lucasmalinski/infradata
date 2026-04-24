@@ -1,7 +1,8 @@
 # %%
-from src.utils.csv_utils import load_csv
-from pathlib import Path  
 import pandas as pd
+from pathlib import Path  
+from src.utils.csv_utils import load_csv
+from src.utils.transform_utils import MONTH_MAP
 
 MAIN_DATA_DIR =  Path(__file__).resolve().parent / "raw_data"
 TIPOS_INFR_DIR = MAIN_DATA_DIR / "tipos_infracao"
@@ -31,13 +32,7 @@ def transform(df: pd.DataFrame, year:int) -> pd.DataFrame:
     df[cols_to_treat] = df[cols_to_treat].apply(pd.to_numeric, errors='coerce')
     df.columns = df.columns.str.upper()
 
-    month_map = {
-        'JAN':1, 'FEV':2, 'MAR':3, 'ABR':4,
-        'MAI':5, 'JUN':6, 'JUL':7, 'AGO':8,
-        'SET':9, 'OUT':10, 'NOV':11, 'DEZ':12
-        }
-
-    df['MES'] = df['MES'].map(month_map)
+    df['MES'] = df['MES'].map(MONTH_MAP)
     df['ANO'] = year
 
     cols = ['MES', 'ANO'] + [c for c in df.columns if c not in ('MES', 'ANO')] 
