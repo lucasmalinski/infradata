@@ -1,7 +1,11 @@
-# %%
+import pandas as pd
+from pathlib import Path
+from src.utils.csv_utils import load_csv
+
 # =======================================
 # Tratamento 6.Indice de Mortos por 10k
 # =======================================
-mortos_por_10k = load_csv(INDICE_MORTOS_PATH)
-
-mortos_por_10k = mortos_por_10k.set_index("ANO")
+def process(fpath: Path) -> pd.DataFrame:
+    df = load_csv(fpath)
+    df = df.set_index("ANO")
+    return df
