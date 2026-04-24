@@ -1,6 +1,7 @@
 /raw_data/**
 !/raw_data/tipos_infracao/
 /silver/*
+src/processing/parse_trechos.py
 
 
 /report/**
