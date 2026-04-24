@@ -12,8 +12,7 @@ def process(fpath: Path) -> pd.DataFrame:
     df = load_csv(fpath)
 
     df = df.transpose()
-    df = df.rename(
-        columns={0: 'pedestres_fatais'}
-    )
+    df.columns = ['pedestres_fatais']
+    df.index.name = 'ANO'
     return df
 
