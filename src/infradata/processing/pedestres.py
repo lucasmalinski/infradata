@@ -1,4 +1,4 @@
-from src.utils.csv_utils import load_csv
+from infradata.utils.csv_utils import load_csv
 from pathlib import Path
 import pandas as pd
 

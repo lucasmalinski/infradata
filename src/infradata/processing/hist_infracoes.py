@@ -1,6 +1,6 @@
 # %%
-from src.utils.csv_utils import load_csv
-from src.utils.veiculos import VEHICLE_TYPE_MAPPING
+from infradata.utils.csv_utils import load_csv
+from infradata.utils.map_veiculos import VEHICLE_TYPE_MAPPING
 from pathlib import Path  
 import pandas as pd
 

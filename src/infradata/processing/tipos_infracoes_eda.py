@@ -1,8 +1,8 @@
 # %%
 import pandas as pd
 from pathlib import Path  
-from src.utils.csv_utils import load_csv
-from src.utils.transform_utils import MONTH_MAP
+from infradata.utils.csv_utils import load_csv
+from infradata.utils.transform_utils import MONTH_MAP
 
 MAIN_DATA_DIR =  Path(__file__).resolve().parent / "raw_data"
 TIPOS_INFR_DIR = MAIN_DATA_DIR / "tipos_infracao"

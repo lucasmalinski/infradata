@@ -1,6 +1,6 @@
 import pandas as pd
 from pathlib import Path
-from src.utils.csv_utils import load_csv
+from infradata.utils.csv_utils import load_csv
 
 # =======================================
 # Tratamento 6.Indice de Mortos por 10k
