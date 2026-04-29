@@ -1,9 +1,14 @@
-/raw_data/**
-!/raw_data/tipos_infracao/
-/silver/*
-src/processing/parse_trechos.py
-
+/data/raw/**
+/data/silver/**
+!/data/external/api
 
 /report/**
+/notebooks/**
+
 **/__pycache__
-/.venv
+
+
+*.egg-info/
+.eggs/
+
+/.vscode
