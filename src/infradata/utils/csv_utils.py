@@ -1,6 +1,7 @@
 import pandas as pd 
+from pathlib import Path
 
-def load_csv(f, debug=False, encoding=None):
+def load_csv(f: Path, debug=False, encoding: str=None):
     candidates = [encoding] if encoding else ["utf-8", "cp1252", "latin-1"]
     for enc in candidates:
         try:
