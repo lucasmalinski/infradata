@@ -7,8 +7,8 @@ def load_csv(f: Path, debug=False, encoding: str=None):
         try:
             df = pd.read_csv(f, encoding=enc, sep=None, engine="python")
             if debug:
-                print(f"Encoding used for {f.name}: {enc}")
+                print(f"[csv_utils] Encoding used for {f.name}: {enc}")
             return df
         except UnicodeDecodeError:
             continue
-    raise ValueError(f"Could not decode {f}")
+    raise ValueError(f"[csv_utils] Could not decode {f}")
