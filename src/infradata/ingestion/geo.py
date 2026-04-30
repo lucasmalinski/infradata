@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 import requests
 import geopandas as gpd
-from infradata.utils.project_root import find_project_root
 
 
 def ingest(URL: str, root: Path) -> gpd.GeoDataFrame:
