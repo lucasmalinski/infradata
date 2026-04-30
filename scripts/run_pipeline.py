@@ -1,19 +1,35 @@
 # %%
 import os
-from pathlib import Path
-from infradata.processing.frota import process as process_frota 
-from infradata.processing.acidentes import process as process_acidentes 
-from infradata.processing.pedestres import process as process_mortes
-from infradata.processing.indice import process as process_indice
-from infradata.processing.habilitados import process as process_habilitados 
-from infradata.processing.tipos_infracoes_eda import process as process_tipos_infracoes
-from infradata.processing.hist_infracoes import process as process_hist_infracoes
 from dotenv import load_dotenv
+
+from infradata.utils.project_root import find_project_root
+from infradata.utils.csv_utils import load_csv
+
+# =======================================
+# Concatenated ingestions imports
+# =======================================
+from infradata.ingestion.tipos_infracoes import ingest as ingest_tiposinfracoes
+from infradata.ingestion.hist_infracoes import ingest as ingest_histinfracoes
+
+# =======================================
+# Transform imports
+# ======================================= 
+from infradata.transform.frota import transform as tf_frota 
+from infradata.transform.acidentes import transform as tf_acidentes 
+from infradata.transform.pedestres import transform as tf_mpedestres
+from infradata.transform.indice import transform as tf_mortalidade
+from infradata.transform.habilitados import transform as tf_habilitados 
+from infradata.transform.tipos_infracoes import transform_all as tf_tiposinfracoes
+from infradata.transform.hist_infracoes import transform as tf_histinfracoes
+
+
+
 
 load_dotenv()
 
-RAW_DIR = Path(os.getenv("RAW_DATA_PATH"))
-SILVER_DIR = Path(os.getenv("SILVER_DATA_PATH"))
+PROJECT_ROOT = find_project_root(__file__, debug= True)
+RAW_DIR = PROJECT_ROOT / os.getenv("RAW_DATA_PATH")
+SILVER_DIR = PROJECT_ROOT / os.getenv("SILVER_DATA_PATH")
 
 # %%
 
@@ -28,20 +44,21 @@ HABILITADOS_PATH = RAW_DIR / "11.numero-de-habilitados-no-distrito-federal-nos-u
 TIPOS_INFR_DIR = RAW_DIR / "tipos_infracao"
 HIST_INFRACOES_DIR =  RAW_DIR / "historico_infracao"
 
-# %%
-
 def main():
 
-    # Isolated Files 
+    # Destination Filepaths defined by dict
     datasets = {
-        'frota.csv' : process_frota(FROTA_PATH),
-        'acidentes.csv' : process_acidentes (ACFAT_PATH),
-        'mortes_pedestres_vias_nsem_sfaixa.csv' : process_mortes(PED_MORT_PATH),
-        'indice_mortos_por_10k_veiculos.csv' : process_indice(INDICE_MORTOS_PATH),
-        'habilitados.csv' : process_habilitados(HABILITADOS_PATH),
-        'tipos_infracoes.csv' : process_tipos_infracoes(TIPOS_INFR_DIR),
-        'hist_infracoes.csv' : process_hist_infracoes(HIST_INFRACOES_DIR)
+        'frota.csv' : tf_frota(load_csv(FROTA_PATH)),
+        'acidentes.csv' : tf_acidentes(load_csv(ACFAT_PATH)),
+        'mortes_pedestres_vias_nsem_sfaixa.csv' : tf_mpedestres(load_csv(PED_MORT_PATH)),
+        'indice_mortos_por_10k_veiculos.csv' : tf_mortalidade(load_csv(INDICE_MORTOS_PATH)),
+        'habilitados.csv' : tf_habilitados(load_csv(HABILITADOS_PATH)),
+        
+        # Directory Paths (Concatenados)
+        'tipos_infracoes.csv' : tf_tiposinfracoes(ingest_tiposinfracoes(TIPOS_INFR_DIR)),
+        'hist_infracoes.csv' : tf_histinfracoes(ingest_histinfracoes(HIST_INFRACOES_DIR))
     }
+
     for name, df in datasets.items():
         df.to_csv(SILVER_DIR / name)
         print(f"Saved file to {SILVER_DIR / name}")
