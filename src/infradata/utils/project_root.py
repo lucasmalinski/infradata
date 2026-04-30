@@ -6,6 +6,6 @@ def find_project_root(start: __file__, debug=False) -> Path:
     while current != current.parent:
         if (current / "pyproject.toml").exists() or (current / ".env").exists():
             if debug: 
-                print(f"Found project root: {current}")
+                print(f"[project_root] Found project root: {current}")
             return current
         current = current.parent    
