@@ -1,0 +1,14 @@
+name: infradata_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pandas
+  - geopandas
+  - requests
+  - python-dotenv
+  - camelot-py
+  - pip
+  - pip:
+    - -r requirements.txt
+    - -e .
