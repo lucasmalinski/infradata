@@ -58,6 +58,6 @@ VEHICLE_TYPE_MAPPING = {
     "CARRO-DE-MÃO": "OUTROS",
 
     # Inválidos → NaN
-    "INEXISTENTE": None,
+    "INEXISTENTE": "INEXISTENTE",
     "":            None,
 }
