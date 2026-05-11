@@ -2,6 +2,8 @@
 
 Requisito: Conda (Miniconda ou Anaconda) deve estar instalado antes de criar o ambiente.
 
+Nota: o principal motivo para recomendar Conda neste projeto é o uso de `geopandas` e suas dependências nativas. Instalar esses pacotes via Conda (conda-forge) evita builds problemáticos e reduz o risco de quebrar bibliotecas Python globais do sistema.
+
 Este repositório fornece um arquivo `environment.yml` pronto para criar um ambiente Conda com as dependências necessárias e instalar o package local `infradata` em modo editável.
 
 Para criar e ativar o ambiente, execute na pasta do projeto:
