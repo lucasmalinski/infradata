@@ -5,7 +5,7 @@ from infradata.utils.map_veiculos import VEHICLE_TYPE_MAPPING
 from infradata.utils.project_root import find_project_root
 from infradata.ingestion.hist_infracoes import ingest as ingest_histinfracoes
 
-load_dotenv()
+load_dotenv(dotenv_path="data_paths.env")
 
 # Main Directory paths
 PROJECT_ROOT = find_project_root(__file__, debug= True)
