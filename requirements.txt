@@ -1,4 +1,4 @@
-pandas
-camelot-py
+# Dependências instaladas via pip (usar apenas pacotes não disponíveis em conda)
+
 
 
