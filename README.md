@@ -23,9 +23,7 @@ python scripts/run_pipeline.py
 
 Para notebooks, e execuções interativas selecione o kernel do ambiente conda `infradata_env`.
 
-Observação: se você precisar de dependências nativas extras (por exemplo para `camelot-py`), instale-as no sistema conforme a documentação do seu sistema operacional.
-
-Se precisar de ajuda, abra uma issue com a saída de `conda list` do ambiente ativo.
+Observação: se você precisar de dependências nativas extras, instale-as via pip se não houver conda packages disponíveis.
 
 ## Dados brutos
 
