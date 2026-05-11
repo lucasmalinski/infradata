@@ -1,4 +1,5 @@
 .env
+*.ini
 
 # Data directories
 /data/raw/**
