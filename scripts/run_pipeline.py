@@ -28,7 +28,7 @@ from infradata.transform.hist_infracoes import transform as tf_histinfracoes
 # =======================================
 # Constants
 # =======================================
-load_dotenv()
+load_dotenv(dotenv_path="data_paths.env")
 
 # Main Directory paths
 PROJECT_ROOT = find_project_root(__file__, debug= True)
