@@ -9,7 +9,7 @@ def ingest(dirpath: Path, debug: bool=False) -> pd.DataFrame:
 
     if cache_raw_concat.exists():
         if debug:
-            print(f"[cache] loading {cache_raw_concat}")
+            print(f"[ingest/hist_infracoes.py] loading {cache_raw_concat}")
         df = pd.read_parquet(cache_raw_concat)
 
     else: 
