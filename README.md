@@ -29,7 +29,7 @@ Se precisar de ajuda, abra uma issue com a saída de `conda list` do ambiente at
 
 ## Dados brutos
 
-Os arquivos de dados brutos não estão versionados neste repositório (veja `.gitignore`). Antes de rodar o pipeline, coloque os dados sob a árvore `data/raw/` seguindo a mesma estrutura usada localmente (ex.: `data/raw/historico_infracao/`, `data/raw/hist_fluxo/`, etc.), ou execute os scripts de ingestão que baixam fontes externas — as caches são salvas em `data/external/` e `data\raw\historico_infracao`.
+Os arquivos de dados brutos não estão versionados neste repositório (veja `.gitignore`). Antes de rodar o pipeline, coloque os dados sob a árvore `data/raw/` seguindo a mesma estrutura usada localmente (ex.: `data/raw/historico_infracao/`, `data/raw/hist_fluxo/`, etc.), ou execute os scripts de ingestão que baixam fontes externas — as caches são salvas em `data/external/` e `data/raw/historico_infracao`.
 
 Resumo rápido:
 
