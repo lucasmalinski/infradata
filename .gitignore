@@ -1,9 +1,9 @@
 *.ini
 
 # Data directories
-/data/raw/**
-/data/silver/**
-/data/external/**
+/data/**
+!/data/**/
+!/data/**/.gitkeep
 /report/**
 /notebooks/**
 
