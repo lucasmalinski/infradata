@@ -1,7 +1,14 @@
 import json
+import os
 from pathlib import Path
 import requests
+from dotenv import load_dotenv
 import geopandas as gpd
+from infradata.utils.project_root import find_project_root
+
+load_dotenv("data_paths.env")
+PROJECT_ROOT = find_project_root(__file__, debug= True)
+
 
 
 def ingest(URL: str, root: Path) -> gpd.GeoDataFrame:
@@ -21,3 +28,8 @@ def ingest(URL: str, root: Path) -> gpd.GeoDataFrame:
 
     gdf = gpd.GeoDataFrame.from_features(data["features"], crs="EPSG:4326")
     return gdf
+
+if __name__ == "__main__":
+
+    gdf = ingest(os.getenv("ROAD_DATA_URL"), root=PROJECT_ROOT)
+
