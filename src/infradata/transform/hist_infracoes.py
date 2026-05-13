@@ -1,9 +1,12 @@
 import os
+import re
 import pandas as pd    
 from dotenv import load_dotenv
 from infradata.utils.map_veiculos import VEHICLE_TYPE_MAPPING
 from infradata.utils.project_root import find_project_root
+from infradata.utils.map_siglas import sigla_map
 from infradata.ingestion.hist_infracoes import ingest as ingest_histinfracoes
+
 
 load_dotenv(dotenv_path="data_paths.env")
 
@@ -19,36 +22,110 @@ CACHE = PROJECT_ROOT / "data" / "silver" / "hist_infracoes.csv"
 
 def transform(df: pd.DataFrame, debug=False) -> pd.DataFrame:
     
+    # =======================================
+    # TIPO DE VEÍCULO
+    # =======================================
+
     df["tipo_veiculo"] = (
             df["tipo_veiculo"]
             .str.upper()
             .str.strip()
         )
 
-    
-    if debug:
-        before_cometimento_null_rm = df["cometimento"].isna().sum()
-        print(f"Number of nulls before null>NA replace and datetime conversion: {before_cometimento_null_rm}")
-
-    df.replace("null", pd.NA, inplace=True)
-
-    df["cometimento"] = pd.to_datetime(df["cometimento"], dayfirst=True, errors="coerce")
-
-    if debug:
-        after_cometimento_nareplace_dt_conversion =  df["cometimento"].isna().sum()
-        print(f"Number of nulls after null>NA replace and datetime conversion: {after_cometimento_nareplace_dt_conversion}")
-
     df["tipo_veiculo"] = (
         df["tipo_veiculo"].map(VEHICLE_TYPE_MAPPING)
     )
 
     if debug:
-        print(f"Applied veículos mapping to df[tipo_veiculo]: ")
+        print(f"\nApplied veículos mapping to df[tipo_veiculo]: ")
         print(VEHICLE_TYPE_MAPPING)
+    
 
+    # =======================================
+    # HORÁRIO DE COMETIMENTO 
+    # =======================================
 
+    # Junção da coluna data e hora, e conversão do resultado em datetime
+    df["cometimento"] = df["cometimento"].astype(str) + " " + df["hora_cometimento"].astype(str)
+    df["cometimento"] = pd.to_datetime(df["cometimento"], format="%d/%m/%Y %H:%M")
+
+    # Criação de coluna numérica
+    df["hora_cometimento"] = df["cometimento"].dt.hour
     # Implement hour and minute validation
 
+    # =======================================
+    # CÓDIGO DE INFRAÇÃO - DETALHAMENTO
+    # =======================================
+
+    # Identificando colunas em que a mesma descrição de infração é usada para mais de um código de infração
+    problemas_de_codigo = (
+        df.groupby("descricao")["tipo_infracao"]
+        .nunique()
+        .loc[lambda x: x > 1]
+    )
+    problemas_de_codigo
+
+    # Ambiguidade checada vide tabela de códigos do RENAINF ("https://www.gov.br/transportes/pt-br/centrais-de-conteudo/tabela-codigo-infracoes-renainf-xlsx")
+    mapping = {
+        "5843-1": "Deixar de indicar c/ antec - início da marcha",
+        "5843-2": "Deixar de indicar c/ antec - manobra de parar",
+        "5843-3": "Deixar de indicar c/ antec - mudança de direção",
+        "5843-4": "Deixar de indicar c/ antec - mudança de faixa",
+    }
+    df["descricao_corrigida"] = (
+        df["tipo_infracao"].map(mapping)
+        .fillna(df["descricao"])
+    )
+
+    
+
+    # =======================================
+    # LOCAL DE COMETIMENTO
+    # =======================================
+    if debug:
+        print("\nExtraindo informações rodoviárias")
+
+    KM_PAT = r'\bkm\s*(\d+[.,]\d+|\d+)\b'
+
+    # Handles: SENTIDO, SENT., SENTINDO (typo), SENTIFI/SENTIFO (typos)
+    # Stops before en-dash (–/\x96), a dash followed by uppercase, or end of string
+    SENTIDO_PAT = (
+        r'\b(senti(?:do|ndo|fi\w*|fo\w*)|sent\.?)\s*'
+        r'([\w\s\/\-\.\,\(\)]+?)'
+        r'(?=\s*[\x96\u2013]|\s*-\s*[A-Z]|\s*$)'
+    )
+    
+    # Extracts: DF-025, DF 085, BR-040, DF001, etc. → normalized to DF-025
+    ROAD_PAT = r'\b((?:DF|BR)\s*[-]?\s*\d{2,3})\b'
+    SIGLA_PAT = r'\b(' + '|'.join(sigla_map.keys()) + r')\b'
+    
+    def extract_road_code(s):
+        if pd.isna(s): return None
+        s = str(s)
+        m = re.search(SIGLA_PAT, s, re.IGNORECASE)
+        if m:
+            return sigla_map[m.group(1).upper()]
+        m = re.search(ROAD_PAT, s, re.IGNORECASE)
+        if not m: return None
+        code = re.sub(r'[\s\-]+', '', m.group(1).upper())
+        return re.sub(r'(DF|BR)(\d+)', r'\1-\2', code)
+
+    def extract_km(s):
+        if pd.isna(s): return None
+        m = re.search(KM_PAT, s, re.IGNORECASE)
+        return m.group(1).replace(',', '.') if m else None
+
+    def extract_sentido(s):
+        if pd.isna(s): return None
+        m = re.search(SENTIDO_PAT, s, re.IGNORECASE)
+        if not m: return None
+        raw = (m.group(1) + ' ' + m.group(2)).strip()
+        # Normalize typos
+        raw = re.sub(r'\bsenti(?:ndo|fi\w*|fo\w*)\b', 'SENTIDO', raw, flags=re.IGNORECASE)
+        raw = re.sub(r'\bsent\.?\b', 'SENT.', raw, flags=re.IGNORECASE)
+        return raw.strip(' .,')  
+    
+    
     # TO-DO
     # =======================================
     # 1) Substituir string de infração por mapa de infrações vide código RENAINF
@@ -83,18 +160,27 @@ def transform(df: pd.DataFrame, debug=False) -> pd.DataFrame:
     #       # Replicar lat/long de [rodovia+km+sentido] idênticos
     #       # Calcular lat/long geograficamente a partir de [rodovia+km+sentido] (TO-DO[4] é pré-requisito )
     # =======================================
-    
-    #strings_hora_cometimento = df["hora_cometimento"].astype(str)
-    #split = strings_hora_cometimento.str.split(":", expand=True)
 
+    df['rodovia_codigo'] = df['auinf_local_rodovia'].apply(extract_road_code)
+
+    # Only fill where target column is missing
+    df['auinf_local_km'] = df['auinf_local_km'].fillna(
+        df['auinf_local_rodovia'].apply(extract_km)
+    )
+
+    # Only fill where target column is missing
+    df['auinf_local_referencia'] = df['auinf_local_referencia'].fillna(
+        df['auinf_local_rodovia'].apply(extract_sentido)
+    )
+    
     return df
 
 if __name__ == '__main__':
     
     df = transform(ingest_histinfracoes(HIST_INFRACOES_DIR, debug=True), debug=True)
     
-    # df.to_csv(SILVER_DIR / NAME)
+
+    df.to_csv(SILVER_DIR / NAME)
     # =======================================
     # CSV saving expected from run_pipeline.py, uncomment for debugging purposes
     # =======================================
-
