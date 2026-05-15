@@ -5,6 +5,7 @@ dependencies:
   - python=3.11
   - pandas
   - geopandas
+  - pyarrow
   - requests
   - python-dotenv
   - camelot-py
