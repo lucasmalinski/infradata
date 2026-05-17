@@ -13,7 +13,7 @@ conda env create -f environment.yml
 conda activate infradata_env
 ```
 
-O `environment.yml` instala `pandas` via Conda e usa `pip` para instalar as dependências listadas em `requirements.txt`  e ainda instala o package local em modo editável (`-e .`).
+O `environment.yml` instala `pandas` via Conda e ainda instala o package local em modo editável (`-e .`).
 
 Após ativar o ambiente, execute o pipeline principal:
 
@@ -26,6 +26,8 @@ Para notebooks, e execuções interativas selecione o kernel do ambiente conda `
 Observação: se você precisar de dependências nativas extras, instale-as via pip se não houver conda packages disponíveis.
 
 ## Dados brutos
+### Baixar Dados Brutos
+[Dados Brutos](https://drive.google.com/drive/folders/1TcY1214yzoNUmIazm7YW0Z-pEd1Hwp3x?usp=sharing)
 
 Os arquivos de dados brutos não estão versionados neste repositório (veja `.gitignore`). Antes de rodar o pipeline, coloque os dados sob a árvore `data/raw/` seguindo a mesma estrutura usada localmente (ex.: `data/raw/historico_infracao/`, `data/raw/hist_fluxo/`, etc.), ou execute os scripts de ingestão que baixam fontes externas — as caches são salvas em `data/external/` e `data/raw/historico_infracao`.
 
@@ -37,7 +39,7 @@ Resumo rápido:
 
 ## Visualização Interativa (Streamlit)
 
-Para executar a aplicação interativa de visualização de infrações:
+Para executar a aplicação interativa de visualização de infrações após rodar a pipeline de transformação dos dados:
 
 ```bash
 # Com o ambiente conda ativado
@@ -52,10 +54,10 @@ A aplicação abre em `http://localhost:8501` e permite:
 
 ### Nota sobre deployment
 
-**Não recomendamos Streamlit Cloud para este projeto** devido às limitações com dependências nativas do `geopandas`. Streamlit Cloud tem dificuldade em resolver builds nativos complexos (GEOS, PROJ, etc.). 
+**Não foi utilizado Streamlit Cloud para este projeto** devido às limitações com dependências nativas do `geopandas`. Streamlit Cloud tem dificuldade em resolver builds nativos complexos (GEOS, PROJ, etc.). 
 
-Para deployment, recomendamos:
-- Plataforma com suporte a Conda (ex: Heroku com buildpack customizado, EC2, Docker)
+Para deployment, utilizar:
+- Plataforma com suporte a Conda 
 - Ou executar localmente com conda + SSH tunnel / VPN
 
 ## Arquivo de caminhos (commitado)
