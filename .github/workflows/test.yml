@@ -23,7 +23,5 @@ jobs:
         conda activate infradata_env
     
     - name: Run tests
-      shell: bash -l {0}
       run: |
-        micromamba activate infradata_env
-        pytest tests/ -v
+        conda run -n infradata_env pytest tests/ -v
