@@ -50,6 +50,7 @@ ROAD_DATA_URL = os.getenv("ROAD_DATA_URL")
 
 
 def main():
+    roads_gdf = ingest_road_data(ROAD_DATA_URL, root=PROJECT_ROOT)
 
     # Destination Filepaths defined by dict
     datasets = {
@@ -62,15 +63,15 @@ def main():
         
         # Directory Paths (Concatenated ans transformed)
         'tipos_infracoes.csv' : tf_tiposinfracoes(ingest_tiposinfracoes(TIPOS_INFR_DIR)),
-        'hist_infracoes.csv' : tf_histinfracoes(ingest_histinfracoes(HIST_INFRACOES_DIR))
+        'hist_infracoes.csv' : tf_histinfracoes(
+            ingest_histinfracoes(HIST_INFRACOES_DIR),
+            road_gdf=roads_gdf,
+        )
     }
 
     for name, df in datasets.items():
         df.to_csv(SILVER_DIR / name)
         print(f"[main] Saved file to {SILVER_DIR / name}")
 
-    # GeoJSON (to be transformed)
-    ingest_road_data(os.getenv("ROAD_DATA_URL"), root=PROJECT_ROOT)
-   
 if __name__ == "__main__":
     main()
