@@ -35,6 +35,29 @@ Resumo rápido:
 - Caches / arquivos baixados: `data/external/` e `data\raw\historico_infracao`
 - Saída processada: `data/silver/`
 
+## Visualização Interativa (Streamlit)
+
+Para executar a aplicação interativa de visualização de infrações:
+
+```bash
+# Com o ambiente conda ativado
+streamlit run src/infradata/visualization/streamlit_app.py
+```
+
+A aplicação abre em `http://localhost:8501` e permite:
+- Visualizar ~200k infrações georreferenciadas (2019-2023) em mapa interativo
+- Filtrar por ano, severidade, rodovia e tipo de veículo
+- Visualizar overlay de geometrias de rodovias (GeoJSON)
+- Performance otimizada com caching de dados e GeoJSON
+
+### Nota sobre deployment
+
+**Não recomendamos Streamlit Cloud para este projeto** devido às limitações com dependências nativas do `geopandas`. Streamlit Cloud tem dificuldade em resolver builds nativos complexos (GEOS, PROJ, etc.). 
+
+Para deployment, recomendamos:
+- Plataforma com suporte a Conda (ex: Heroku com buildpack customizado, EC2, Docker)
+- Ou executar localmente com conda + SSH tunnel / VPN
+
 ## Arquivo de caminhos (commitado)
 
 Este repositório inclui `data_paths.env` com valores padrão para os caminhos de dados públicos. O projeto ainda suporta um arquivo legacy `.env`, mas `data_paths.env` é preferido para deixar claro que o arquivo contém apenas paths públicos.
