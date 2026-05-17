@@ -1,0 +1,33 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ entrega-intermediaria-release ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda-action@v2
+      with:
+        auto-update-conda: true
+        python-version: 3.11
+        miniconda-version: latest
+        channels: conda-forge
+        channel-priority: true
+    
+    - name: Create conda environment
+      shell: bash -l {0}
+      run: |
+        conda env create -f environment.yml
+        conda activate infradata_env
+    
+    - name: Run tests
+      shell: bash -l {0}
+      run: |
+        conda activate infradata_env
+        pytest tests/ -v
