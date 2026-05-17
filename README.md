@@ -26,7 +26,9 @@ Para notebooks, e execuções interativas selecione o kernel do ambiente conda `
 Observação: se você precisar de dependências nativas extras, instale-as via pip se não houver conda packages disponíveis.
 
 ## Dados brutos
+
 ### Baixar Dados Brutos
+
 [Dados Brutos](https://drive.google.com/drive/folders/1TcY1214yzoNUmIazm7YW0Z-pEd1Hwp3x?usp=sharing)
 
 Os arquivos de dados brutos não estão versionados neste repositório (veja `.gitignore`). Antes de rodar o pipeline, coloque os dados sob a árvore `data/raw/` seguindo a mesma estrutura usada localmente (ex.: `data/raw/historico_infracao/`, `data/raw/hist_fluxo/`, etc.), ou execute os scripts de ingestão que baixam fontes externas — as caches são salvas em `data/external/` e `data/raw/historico_infracao`.
@@ -47,6 +49,7 @@ streamlit run src/infradata/visualization/streamlit_app.py
 ```
 
 A aplicação abre em `http://localhost:8501` e permite:
+
 - Visualizar ~200k infrações georreferenciadas (2019-2023) em mapa interativo
 - Filtrar por ano, severidade, rodovia e tipo de veículo
 - Visualizar overlay de geometrias de rodovias (GeoJSON)
@@ -54,10 +57,11 @@ A aplicação abre em `http://localhost:8501` e permite:
 
 ### Nota sobre deployment
 
-**Não foi utilizado Streamlit Cloud para este projeto** devido às limitações com dependências nativas do `geopandas`. Streamlit Cloud tem dificuldade em resolver builds nativos complexos (GEOS, PROJ, etc.). 
+**Não foi utilizado Streamlit Cloud para este projeto** devido às limitações com dependências nativas do `geopandas`. Streamlit Cloud tem dificuldade em resolver builds nativos complexos (GEOS, PROJ, etc.).
 
 Para deployment, utilizar:
-- Plataforma com suporte a Conda 
+
+- Plataforma com suporte a Conda
 - Ou executar localmente com conda + SSH tunnel / VPN
 
 ## Arquivo de caminhos (commitado)
