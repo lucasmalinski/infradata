@@ -1,5 +1,9 @@
 # Infradata
 
+[![Tests](https://github.com/lucasmalinski/infradata/actions/workflows/test.yml/badge.svg)](https://github.com/lucasmalinski/infradata/actions/workflows/test.yml)
+
+![Image](image.png)
+
 Requisito: Conda (Miniconda ou Anaconda) deve estar instalado antes de criar o ambiente.
 
 Nota: o principal motivo para recomendar Conda neste projeto é o uso de `geopandas` e suas dependências nativas. Instalar esses pacotes via Conda (conda-forge) evita builds problemáticos e reduz o risco de quebrar bibliotecas Python globais do sistema.
