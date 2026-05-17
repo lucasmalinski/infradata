@@ -4,9 +4,16 @@
 
 ![Image](image.png)
 
+## Considerações Importantes
+
 Requisito: Conda (Miniconda ou Anaconda) deve estar instalado antes de criar o ambiente.
 
 Nota: o principal motivo para recomendar Conda neste projeto é o uso de `geopandas` e suas dependências nativas. Instalar esses pacotes via Conda (conda-forge) evita builds problemáticos e reduz o risco de quebrar bibliotecas Python globais do sistema.
+
+Infelizmente, devido ao tamanho do dataset fonte, e à restrições de ambiente de plataformas como vercel e streamlit, duas restrições severas precisam ser resolvidas para a entrega final:
+
+> 1) Disponibilização dos dados brutos via Datalake (via Cloud, ex.: Azure blob storage)
+> 2) Engessamento do ambiente conda através de dockerfile. Geopandas possui sub-dependências compiladas em C e costumeiramente quebra dependências quando instalado via pip.
 
 Este repositório fornece um arquivo `environment.yml` pronto para criar um ambiente Conda com as dependências necessárias e instalar o package local `infradata` em modo editável.
 
@@ -18,16 +25,6 @@ conda activate infradata_env
 ```
 
 O `environment.yml` instala `pandas` via Conda e ainda instala o package local em modo editável (`-e .`).
-
-Após ativar o ambiente, execute o pipeline principal:
-
-```bash
-python scripts/run_pipeline.py
-```
-
-Para notebooks, e execuções interativas selecione o kernel do ambiente conda `infradata_env`.
-
-Observação: se você precisar de dependências nativas extras, instale-as via pip se não houver conda packages disponíveis.
 
 ## Dados brutos
 
@@ -42,6 +39,20 @@ Resumo rápido:
 - Dados brutos: `data/raw/` (não comitados)
 - Caches / arquivos baixados: `data/external/` e `data\raw\historico_infracao`
 - Saída processada: `data/silver/`
+
+## Execução da Pipeline
+>
+> **Após ativar o ambiente conda!**
+
+Execute o pipeline principal para gerar a camada silver de dados (necessária para o funcionamento do app streamlit):
+
+```bash
+python scripts/run_pipeline.py
+```
+
+Para notebooks, e execuções interativas selecione o kernel do ambiente conda `infradata_env`.
+
+Observação: se você precisar de dependências nativas extras, instale-as via pip se não houver conda packages disponíveis.
 
 ## Visualização Interativa (Streamlit)
 
